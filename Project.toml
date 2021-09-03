@@ -1,0 +1,7 @@
+name = "JuliaEuler"
+uuid = "992cdcdc-c32e-432e-a0ba-0cd65cc4749c"
+authors = ["Brynjar Smári Bjarnason <binni@binnisb.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.7"

@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+JuliaEuler = "992cdcdc-c32e-432e-a0ba-0cd65cc4749c"
