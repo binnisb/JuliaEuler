@@ -3,5 +3,9 @@ uuid = "992cdcdc-c32e-432e-a0ba-0cd65cc4749c"
 authors = ["Brynjar Smári Bjarnason <binni@binnisb.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+IterTools = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+
 [compat]
 julia = "1.7"
