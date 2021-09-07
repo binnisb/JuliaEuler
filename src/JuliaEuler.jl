@@ -371,7 +371,7 @@ ex19(ds::Date,de::Date) = sum([1 for d in ds:Month(1):de if Dates.issunday(d)])
 
 ex22() = begin
     cv = Dict([(v,i) for (i,v) in enumerate('A':'Z')])
-    open(f->read(f,String), "src\\assets\\p022_names.txt") |> x-> replace(x,"\""=>"") |> x-> split(x,",") |> sort |> enumerate .|> (x->x[1] * sum([cv[c] for c in x[2]])) |> sum
+    open(f->read(f,String), joinpath(@__DIR__,"assets","p022_names.txt")) |> x-> replace(x,"\""=>"") |> x-> split(x,",") |> sort |> enumerate .|> (x->x[1] * sum([cv[c] for c in x[2]])) |> sum
 end
 
 end
