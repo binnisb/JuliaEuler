@@ -8,7 +8,15 @@ export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19
 
 export ex22
 export fib, primes, factors, primes_of_num, Node
+"""
+```jldoctest
+fib(;terms=7)
 
+# output
+
+[1, 2, 3, 5, 8, 13, 21]
+```
+"""
 function fib(; terms=missing, under=missing)
 
     function _fib_term(n; current, low_in=1, high_in=1)
