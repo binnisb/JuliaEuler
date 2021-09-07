@@ -117,4 +117,8 @@ using Test
         @test ex19(Date(2000,1,1), Date(2000,12,1)) == 1
         @test ex19(Date(1901,1,1), Date(2000,12,1)) == 171
     end
+
+    @testset "Ex22" begin
+        @test ex22() == 871198282
+    end
 end

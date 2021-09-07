@@ -5,6 +5,8 @@ using Dates
 
 export ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10
 export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19
+
+export ex22
 export fib, primes, factors, primes_of_num, Node
 
 function fib(; terms=missing, under=missing)
@@ -365,5 +367,11 @@ ex18(n) = begin
     res[end][1]
 end
 ex19(ds::Date,de::Date) = sum([1 for d in ds:Month(1):de if Dates.issunday(d)])
+
+
+ex22() = begin
+    cv = Dict([(v,i) for (i,v) in enumerate('A':'Z')])
+    open(f->read(f,String), "src\\assets\\p022_names.txt") |> x-> replace(x,"\""=>"") |> x-> split(x,",") |> sort |> enumerate .|> (x->x[1] * sum([cv[c] for c in x[2]])) |> sum
+end
 
 end
