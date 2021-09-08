@@ -4,9 +4,9 @@ using IterTools
 using Dates
 
 export ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10
-export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19
+export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20
+export ex21, ex22
 
-export ex22
 export fib, primes, factors, primes_of_num, Node
 """
 ```jldoctest
@@ -375,6 +375,8 @@ ex18(n) = begin
     res[end][1]
 end
 ex19(ds::Date,de::Date) = sum([1 for d in ds:Month(1):de if Dates.issunday(d)])
+ex20(n) = reduce(*, BigInt(1):BigInt(n)) |> x->"$x" |> x->split(x,"") .|> (x->parse(Int,x)) |> sum 
+ex21(n) = [(i, sum([j for j in 1:i-1 if i % j == 0])) for i in 2:n] |> x->Dict(x) |> x-> [(k,v) for (k,v) in x if (k == get(x,v,0)) & (k != v)] |> Dict |>keys |> sum
 
 
 ex22() = begin

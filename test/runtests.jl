@@ -118,6 +118,17 @@ using Test
         @test ex19(Date(1901,1,1), Date(2000,12,1)) == 171
     end
 
+    @testset "Ex20" begin
+        @test ex20(10) == 27
+        @test ex20(100) == 648
+    end
+
+    @testset "Ex21" begin
+        @test ex21(284) == 504
+        @test ex21(10000) == 31626
+    end
+
+
     @testset "Ex22" begin
         @test ex22() == 871198282
     end
