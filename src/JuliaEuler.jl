@@ -3,11 +3,13 @@ module JuliaEuler
 using IterTools
 using Dates
 
+import Base: product
+
 export ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10
 export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20
 export ex21, ex22, ex23
 
-export fib, primes, factors, primes_of_num, Node
+export fib, primes, factors, primes_of_num, proper_divisors, permutations, product, combinations
 """
 ```jldoctest
 julia> fib(;terms=7) == [1, 2, 3, 5, 8, 13, 21]
@@ -91,6 +93,27 @@ function primes_of_num(n)
     [f for (f,_) in fac]
 end
 
+function proper_divisors(n)
+    [j for j in 1:n-1 if n % j == 0]
+end
+
+function product(l, n::Int)
+    product([l for i in 1:n]...)
+end
+
+function permutations(l, n)
+    ps = product(l,n) |> collect
+    x,y = size(ps)
+    [ps[i,j] for i in 1:x, j in 1:y if i != j]
+end
+
+function combinations(l, n; with_replacement=false)
+    n > 2 ? throw("Not Implemented for n > 2") : skip
+    ps = product(l,n) |> collect
+    x,y = size(ps)
+    shift = !with_replacement
+    [ps[i,j] for i in 1:x-shift for j in i+shift:y]
+end
 # Write your package code here.
 ex1(n) = sum(i for i in 3:3:(n-1)) + sum(i for i in 5:5:(n-1)) - sum(i for i in 15:15:(n-1))
 ex2(n) = fib(;under=n) |> x->filter(y->y%2==0, x) |> sum
@@ -374,12 +397,18 @@ ex18(n) = begin
 end
 ex19(ds::Date,de::Date) = sum([1 for d in ds:Month(1):de if Dates.issunday(d)])
 ex20(n) = reduce(*, BigInt(1):BigInt(n)) |> x->"$x" |> x->split(x,"") .|> (x->parse(Int,x)) |> sum 
-ex21(n) = [(i, sum([j for j in 1:i-1 if i % j == 0])) for i in 2:n] |> x->Dict(x) |> x-> [(k,v) for (k,v) in x if (k == get(x,v,0)) & (k != v)] |> Dict |>keys |> sum
-
-
+ex21(n) = [(i, sum(proper_divisors(i))) for i in 2:n] |> x->Dict(x) |> x-> [(k,v) for (k,v) in x if (k == get(x,v,0)) & (k != v)] |> Dict |>keys |> sum
 ex22() = begin
     cv = Dict([(v,i) for (i,v) in enumerate('A':'Z')])
     open(f->read(f,String), joinpath(@__DIR__,"assets","p022_names.txt")) |> x-> replace(x,"\""=>"") |> x-> split(x,",") |> sort |> enumerate .|> (x->x[1] * sum([cv[c] for c in x[2]])) |> sum
+end
+ex23(n) = begin
+    filter_abundant(x) = filter(y -> y[1] < y[2] ? true : false, x)
+    comb(x) = combinations(x,2;with_replacement=true)
+    [(i,sum(proper_divisors(i))) for i in 2:n] |> filter_abundant .|> (x-> x[1]) |> comb .|> (x-> sum(x)) |> x-> setdiff(1:n,x) |> sum
+end
+ex24() = begin
+    
 end
 
 end

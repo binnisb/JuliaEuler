@@ -21,6 +21,23 @@ using Test
 
     end
 
+    @testset "ProperDivisors" begin
+        @test proper_divisors(220) == [1, 2, 4, 5, 10, 11, 20, 22, 44, 55, 110]
+        @test proper_divisors(284) == [1, 2, 4, 71, 142]
+    end
+
+    @testset "Permutations" begin
+        @test Set(permutations([1,2,3], 2)) == Set([(1,2), (1,3), (2,1), (2,3), (3,1),(3,2)])
+    end
+
+    @testset "Product" begin
+        @test Set(product([1,2,3], 2)) == Set([(1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3)])
+    end
+
+    @testset "combinations" begin
+        @test Set(combinations([1,2,3], 2)) == Set([(1,2), (1,3), (2,3)])
+        @test Set(combinations([1,2,3], 2;with_replacement=true)) == Set([(1,1), (1,2), (1,3), (2,2), (2,3), (3,3)])
+    end
 
     @testset "Ex1" begin
         @test ex1(10) == 23
@@ -137,4 +154,6 @@ using Test
         @test ex23(24) == sum(1:23)
         @test ex23(28123) == 4179871
     end
+
+    
 end
