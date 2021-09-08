@@ -132,4 +132,9 @@ using Test
     @testset "Ex22" begin
         @test ex22() == 871198282
     end
+
+    @testset "Ex23" begin
+        @test ex23(24) == sum(1:23)
+        @test ex23(28123) == 4179871
+    end
 end
