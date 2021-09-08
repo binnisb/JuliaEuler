@@ -1,15 +1,15 @@
 module JuliaEuler
 
-using IterTools
 using Dates
+using Lazy
 
-import Base: product
+import Base.Iterators: product
 
 export ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10
 export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20
-export ex21, ex22, ex23
+export ex21, ex22, ex23, ex24, ex25
 
-export fib, primes, factors, primes_of_num, proper_divisors, permutations, product, combinations
+export fib, fibs, primes, factors, primes_of_num, proper_divisors, permutations, product, combinations
 """
 ```jldoctest
 julia> fib(;terms=7) == [1, 2, 3, 5, 8, 13, 21]
@@ -17,33 +17,20 @@ true
 
 ```
 """
+fibs = @lazy BigInt(1):1:(fibs + drop(1,fibs))
+
 function fib(; terms=missing, under=missing)
-
-    function _fib_term(n; current, low_in=1, high_in=1)
-        if current == n
-            return [high_in]
-        else
-            return append!([high_in], _fib_term(n; current=current + 1, low_in=high_in, high_in=low_in+high_in))
-        end
-    end
-
-    function _fib_under(n; current, low_in=1, high_in=1)
-        if current >= n
-            return []
-        else
-            return append!([high_in], _fib_under(n; current=low_in+high_in, low_in=high_in, high_in=low_in+high_in))
-        end
-    end
     m = count(x->ismissing(x), [terms,under])
     if m in (0,2)
         throw("User either number of terms, or fibs under certain value")
     end
     if !ismissing(terms)
-        return _fib_term(terms; current=1, low_in=1, high_in=1)
+        return take(terms, fibs)
     else
-        return _fib_under(under; current=1, low_in=1, high_in=1)
+        return takewhile(x-> x < under, fibs)
     end    
 end
+
 
 function primes(n)
     p = Vector{Int}()
@@ -101,18 +88,27 @@ function product(l, n::Int)
     product([l for i in 1:n]...)
 end
 
+function unique_sorted(ind) 
+    for i in 1:length(ind)-1
+        if ind[i] == ind[i+1]
+            return false
+        end
+    end
+    true
+end
+
 function permutations(l, n)
-    ps = product(l,n) |> collect
-    x,y = size(ps)
-    [ps[i,j] for i in 1:x, j in 1:y if i != j]
+    ps = product(l,n)
+    pd = product(1:length(l),n)
+    
+    (p for (p,ind) in zip(ps,pd) if unique_sorted(sort(collect(ind))))
 end
 
 function combinations(l, n; with_replacement=false)
-    n > 2 ? throw("Not Implemented for n > 2") : skip
-    ps = product(l,n) |> collect
-    x,y = size(ps)
-    shift = !with_replacement
-    [ps[i,j] for i in 1:x-shift for j in i+shift:y]
+    ps = product(l,n)
+    pd = product(1:length(l),n)
+
+    (p for (p,ind) in zip(ps,pd) if (issorted(ind) & (with_replacement | unique_sorted(ind))))
 end
 # Write your package code here.
 ex1(n) = sum(i for i in 3:3:(n-1)) + sum(i for i in 5:5:(n-1)) - sum(i for i in 15:15:(n-1))
@@ -130,7 +126,15 @@ ex4(n) = begin
     end
     max_pal
 end
-ex5(n) = 1:n .|> factors |> Base.Iterators.flatten |> Set |> collect |> sort |> (x->groupby(y->y[1],x)) .|> (x-> x[1][1]^maximum([v for (_,v) in x])) |> (x-> reduce(*,x))
+ex5(n) = begin 
+    f = 1:n .|> factors |> Base.Iterators.flatten |> Set |> collect |> sort |> (x->groupby(y->y[1],x)) 
+    res = 1
+    for (k,v) in f
+        m = k^maximum([i for (_,i) in v])
+        res *= m
+    end
+    res
+end
 """
 ``(1+2+3+\\ldots+n)^2 - (1^2+2^2+3^2+\\ldots+n^2)``
 """
@@ -405,10 +409,39 @@ end
 ex23(n) = begin
     filter_abundant(x) = filter(y -> y[1] < y[2] ? true : false, x)
     comb(x) = combinations(x,2;with_replacement=true)
-    [(i,sum(proper_divisors(i))) for i in 2:n] |> filter_abundant .|> (x-> x[1]) |> comb .|> (x-> sum(x)) |> x-> setdiff(1:n,x) |> sum
+    ab_nums = [(i,sum(proper_divisors(i))) for i in 2:n] |> filter_abundant .|> (x-> x[1])
+    all_nums = Set(1:n)
+    for c in comb(ab_nums)
+        pop!(all_nums,sum(c),0)
+    end
+    sum(all_nums)
 end
-ex24() = begin
-    
+
+ex24(l,n) = begin
+    inds_to_out(ii) = begin
+        [l[i] for i in ii] |> join |> x-> parse(Int,x)
+    end
+    if reduce(*,1:length(l)) == n
+        return length(l):-1:1 |> collect |> inds_to_out
+    end
+    res = n
+    inds = Vector{Int}()
+    inds_left = 1:length(l)|>collect
+    for i in length(l)-1:-1:1
+        fact = reduce(*,1:i)
+        d,res = divrem(res,fact)
+        next_ind = d + (res!=0)
+        ind = inds_left[next_ind]
+        append!(inds,ind)
+        deleteat!(inds_left,next_ind)
+
+        if (fact == res) | (res == 0)
+            break
+        end
+    end
+    append!(inds,reverse(inds_left)) |> inds_to_out
 end
+
+ex25(n) = takeuntil(x-> x > BigInt(10)^(n-1), fibs) |> length
 
 end
