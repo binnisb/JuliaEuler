@@ -25,5 +25,10 @@ using JuliaEuler
         @test ex28(7) == 261
         @test ex28(1001) == 669171001
     end
+
+    @testset "Ex29" begin
+        @test ex29(5,5) == 15
+        @test ex29(100,100) == 9183
+    end
 end
 

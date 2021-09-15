@@ -7,7 +7,7 @@ import Base.Iterators: product
 
 export ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10
 export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20
-export ex21, ex22, ex23, ex24, ex25, ex26, ex27, ex28
+export ex21, ex22, ex23, ex24, ex25, ex26, ex27, ex28, ex29
 
 export fib, fibs, primes, factors, primes_of_num, proper_divisors, permutations, product, combinations
 """
@@ -488,5 +488,20 @@ ex27(am, bm) = begin
     max_mul
 end
 
-ex28(n) = 1 + sum([sum([(i^2)-(i-1)*j for j in 0:3]) for i in 3:2:n])
+ex28(n) = 1 + sum((i^2+(i-2)^2 + i-1)*2  for i in 3:2:n)
+
+ex29(am,bm) = begin
+    res = Set{BigInt}()
+    for a_tmp in 2:am
+        a = big(a_tmp)
+        b = 2
+        while b <= bm
+            a *= a_tmp
+            push!(res, a)
+            b += 1
+        end
+    end
+    length(res)
+end
+
 end
