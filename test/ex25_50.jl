@@ -18,5 +18,12 @@ using JuliaEuler
         @test ex27(1000,1000) == -59231
         @test ex27(80,1602) == -126479
     end
+
+    @testset "Ex28" begin
+        @test ex28(3) == 25
+        @test ex28(5) == 101
+        @test ex28(7) == 261
+        @test ex28(1001) == 669171001
+    end
 end
 
