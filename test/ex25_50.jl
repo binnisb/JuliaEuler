@@ -9,5 +9,14 @@ using JuliaEuler
         
     end
 
+    @testset "Ex26" begin
+        @test ex26(10) == 7
+        @test ex26(1000) == 983
+    end
+
+    @testset "Ex27" begin
+        @test ex27(1000,1000) == -59231
+        @test ex27(80,1602) == -126479
+    end
 end
 

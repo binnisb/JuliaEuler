@@ -7,7 +7,7 @@ import Base.Iterators: product
 
 export ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10
 export ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20
-export ex21, ex22, ex23, ex24, ex25
+export ex21, ex22, ex23, ex24, ex25, ex26, ex27
 
 export fib, fibs, primes, factors, primes_of_num, proper_divisors, permutations, product, combinations
 """
@@ -444,4 +444,47 @@ end
 
 ex25(n) = takeuntil(x-> x > BigInt(10)^(n-1), fibs) |> length
 
+ex26(n) = begin
+    N, hi = 0, 0
+    for n = 1:n
+        for β = 6:1000
+            if (1//n*BigInt(10)^β)%1 == ((1//n * BigInt(10)^5) %1) 
+                if hi < β-5
+                    hi = β-5
+                    N = n
+                end
+                break
+            end
+        end
+    end
+    N
+end
+
+ex27(am, bm) = begin
+    nm = 5000
+    ps = primes(nm^2)
+    p = Set(ps)
+    mp = ps[end]
+    max_primes = 0
+    max_mul = 0
+    for a in (-am+1):(am-1)
+        for b in -bm:bm
+            for n = 1:nm
+                f = (n^2 + a*n +b)
+                if f in p
+                    continue
+                elseif f > mp
+                    throw("GenerateMorePrimes")
+                else
+                    if n > max_primes
+                        max_primes = n
+                        max_mul = a*b
+                    end
+                    break
+                end
+            end
+        end
+    end
+    max_mul
+end
 end
